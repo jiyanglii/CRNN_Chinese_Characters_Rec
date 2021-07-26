@@ -17,7 +17,7 @@ from tensorboardX import SummaryWriter
 def parse_arg():
     parser = argparse.ArgumentParser(description="train crnn")
 
-    parser.add_argument('--cfg', help='experiment configuration filename', required=True, type=str)
+    parser.add_argument('--cfg', help='experiment configuration filename', required=True, type=str)    #help='experiment configuration filename'
 
     args = parser.parse_args()
 

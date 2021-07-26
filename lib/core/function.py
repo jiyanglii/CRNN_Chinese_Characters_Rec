@@ -38,7 +38,9 @@ def train(config, train_loader, dataset, converter, model, criterion, optimizer,
         data_time.update(time.time() - end)
 
         labels = utils.get_batch_label(dataset, idx)
+        # print(idx)
         inp = inp.to(device)
+        # print(inp)
 
         # inference
         preds = model(inp).cpu()
@@ -46,8 +48,13 @@ def train(config, train_loader, dataset, converter, model, criterion, optimizer,
         # compute loss
         batch_size = inp.size(0)
         text, length = converter.encode(labels)                    # length = 一个batch中的总字符长度, text = 一个batch中的字符所对应的下标
+        # print(text)
+        # print(length)
         preds_size = torch.IntTensor([preds.size(0)] * batch_size) # timestep * batchsize
         loss = criterion(preds, text, preds_size, length)
+        # print(preds_size)
+        # print("length")
+        # print(length)
 
         optimizer.zero_grad()
         loss.backward()
@@ -94,14 +101,20 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
             # compute loss
             batch_size = inp.size(0)
             text, length = converter.encode(labels)
+            # print(text)
+            # print(length)
             preds_size = torch.IntTensor([preds.size(0)] * batch_size)
+            # print(preds_size)
             loss = criterion(preds, text, preds_size, length)
 
             losses.update(loss.item(), inp.size(0))
 
             _, preds = preds.max(2)
+            print(_)
             preds = preds.transpose(1, 0).contiguous().view(-1)
+            # print(_)
             sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
+            # print(sim_preds)
             for pred, target in zip(sim_preds, labels):
                 if pred == target:
                     n_correct += 1

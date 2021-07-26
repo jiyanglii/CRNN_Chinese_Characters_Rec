@@ -21,9 +21,14 @@ class _OWN(data.Dataset):
 
         # convert name:indices to name:string
         with open(txt_file, 'r', encoding='utf-8') as file:
-            self.labels = [{c.split(' ')[0]: c.split(' ')[-1][:-1]} for c in file.readlines()]
+            # self.labels = [{c.split(' ')[0]: c.split(' ')[-1][:-1]} for c in file.readlines()]
+            self.labels = [{c.split(' ')[0]: c.split(' ')[1:]} for c in file.readlines()]
+
+            # for c in file.readlines():
+            #     print(c)
 
         print("load {} images!".format(self.__len__()))
+        # print(self.labels)
 
     def __len__(self):
         return len(self.labels)

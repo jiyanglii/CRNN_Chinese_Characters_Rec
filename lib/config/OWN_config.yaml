@@ -12,7 +12,7 @@ CUDNN:
 
 DATASET:
   DATASET: OWN
-  ROOT: "H:/DL-DATASET/360M/images"
+  ROOT: "images/train_imu_stft_2"
   JSON_FILE: {'train': 'lib/dataset/txt/train_own.txt', 'val': 'lib/dataset/txt/test_own.txt'}
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
@@ -21,7 +21,7 @@ DATASET:
   ALPHABETS: ''
 
 TRAIN:
-  BATCH_SIZE_PER_GPU: 32
+  BATCH_SIZE_PER_GPU: 16
   SHUFFLE: True
   BEGIN_EPOCH: 0
   END_EPOCH: 100

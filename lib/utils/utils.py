@@ -58,6 +58,8 @@ def create_log_folder(cfg, phase='train'):
 
 
 def get_batch_label(d, i):
+    # print(d.labels)
+    # print(i)
     label = []
     for idx in i:
         label.append(list(d.labels[idx].values())[0])
@@ -79,11 +81,15 @@ class strLabelConverter(object):
         if self._ignore_case:
             alphabet = alphabet.lower()
         self.alphabet = alphabet + '-'  # for `-1` index
+        # print("alphabet is: ")
+        # print(self.alphabet)
 
         self.dict = {}
+        alphabet = alphabet.split('\n')
         for i, char in enumerate(alphabet):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
             self.dict[char] = i + 1
+        # print(self.dict)
 
     def encode(self, text):
         """Support batch or single str.
@@ -98,17 +104,24 @@ class strLabelConverter(object):
 
         length = []
         result = []
+        # print(text)
         decode_flag = True if type(text[0])==bytes else False
 
         for item in text:
-
             if decode_flag:
                 item = item.decode('utf-8','strict')
-            length.append(len(item))
+                # print(item)
+
+            length.append(len(item)-1)
             for char in item:
+                if char not in self.dict or char == '':
+                    continue
+                # print(char)
                 index = self.dict[char]
+                # print(index)
                 result.append(index)
         text = result
+
         return (torch.IntTensor(text), torch.IntTensor(length))
 
     def decode(self, t, length, raw=False):
@@ -124,6 +137,7 @@ class strLabelConverter(object):
         Returns:
             text (str or list of str): texts to convert.
         """
+        # print(str(length.numel()) + ' ***********************')
         if length.numel() == 1:
             length = length[0]
             assert t.numel() == length, "text with length: {} does not match declared length: {}".format(t.numel(), length)
@@ -132,8 +146,11 @@ class strLabelConverter(object):
             else:
                 char_list = []
                 for i in range(length):
+                    # print(length)
+                    # print(t[i])
                     if t[i] != 0 and (not (i > 0 and t[i - 1] == t[i])):
                         char_list.append(self.alphabet[t[i] - 1])
+                        print(self.alphabet[t[i] - 1])
                 return ''.join(char_list)
         else:
             # batch mode
@@ -146,6 +163,8 @@ class strLabelConverter(object):
                     self.decode(
                         t[index:index + l], torch.IntTensor([l]), raw=raw))
                 index += l
+
+            # print(texts)
             return texts
 
 def get_char_dict(path):

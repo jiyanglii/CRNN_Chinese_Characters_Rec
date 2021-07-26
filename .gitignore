@@ -1,0 +1,8 @@
+*.cpython-37.pyc
+*.h
+*.Dingrans-MacBook-Pro-1114.local
+venv/
+output/
+*.png
+/.idea/workspace.xml
+*.zip
