@@ -27,7 +27,9 @@ def parse_arg():
         config = edict(config)
 
     config.DATASET.ALPHABETS = alphabets.alphabet
-    config.MODEL.NUM_CLASSES = len(config.DATASET.ALPHABETS)
+    # config.MODEL.NUM_CLASSES = len(config.DATASET.ALPHABETS)
+    # print(' ****************************** {}'.format(config.DATASET.ALPHABETS.split('\n')[-1]))
+    config.MODEL.NUM_CLASSES = len(config.DATASET.ALPHABETS.split('\n')) - 1
 
     return config
 

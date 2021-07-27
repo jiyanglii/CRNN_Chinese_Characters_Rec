@@ -39,20 +39,26 @@ def train(config, train_loader, dataset, converter, model, criterion, optimizer,
 
         labels = utils.get_batch_label(dataset, idx)
         # print(idx)
+        # print(labels)
         inp = inp.to(device)
         # print(inp)
 
         # inference
         preds = model(inp).cpu()
-
+        # preds = model(inp)
+        preds = preds.to(torch.float64)
+        preds = preds.to(device)
         # compute loss
         batch_size = inp.size(0)
         text, length = converter.encode(labels)                    # length = 一个batch中的总字符长度, text = 一个batch中的字符所对应的下标
         # print(text)
         # print(length)
-        preds_size = torch.IntTensor([preds.size(0)] * batch_size) # timestep * batchsize
-        loss = criterion(preds, text, preds_size, length)
-        # print(preds_size)
+        preds_size = torch.IntTensor([preds.size(0)] * batch_size)  # timestep * batchsize  preds.size: 41 x 16 x 2018
+        loss = criterion(preds, text, preds_size, length)  # text size is sum(length)
+        # print(preds.size(2))
+        # print(text.size(0))
+        # print(sum(length))
+        # print(preds_size)    # 41
         # print("length")
         # print(length)
 
@@ -89,11 +95,15 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
     model.eval()
 
     n_correct = 0
+    # print(val_loader)
     with torch.no_grad():
         for i, (inp, idx) in enumerate(val_loader):
 
             labels = utils.get_batch_label(dataset, idx)
+            # print(labels)
             inp = inp.to(device)
+            # print(inp)
+            # print(idx)
 
             # inference
             preds = model(inp).cpu()
@@ -110,11 +120,11 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
             losses.update(loss.item(), inp.size(0))
 
             _, preds = preds.max(2)
-            print(_)
-            preds = preds.transpose(1, 0).contiguous().view(-1)
             # print(_)
+            preds = preds.transpose(1, 0).contiguous().view(-1)
+            # print(preds.data)    # [0, 0, 0, ...]
             sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
-            # print(sim_preds)
+            # print(sim_preds)    # '' '' '' ...
             for pred, target in zip(sim_preds, labels):
                 if pred == target:
                     n_correct += 1

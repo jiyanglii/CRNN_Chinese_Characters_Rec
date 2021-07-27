@@ -7,3 +7,5 @@ output/
 /.idea/workspace.xml
 *.zip
 *.jpg
+*.iml
+/.idea/misc.xml

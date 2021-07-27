@@ -90,6 +90,7 @@ class strLabelConverter(object):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
             self.dict[char] = i + 1
         # print(self.dict)
+        # self.dict['-'] = 0
 
     def encode(self, text):
         """Support batch or single str.
@@ -110,17 +111,22 @@ class strLabelConverter(object):
         for item in text:
             if decode_flag:
                 item = item.decode('utf-8','strict')
-                # print(item)
+            # print("ITEM***")
+            # print(item)
 
-            length.append(len(item)-1)
+            length.append((len(item)-1)*2-1)
             for char in item:
                 if char not in self.dict or char == '':
                     continue
-                # print(char)
                 index = self.dict[char]
-                # print(index)
+
+                # print(char)
                 result.append(index)
+                result.append(0)
+            result = result[:-1]
         text = result
+        # print(text)
+        # print(length)
 
         return (torch.IntTensor(text), torch.IntTensor(length))
 
@@ -150,7 +156,7 @@ class strLabelConverter(object):
                     # print(t[i])
                     if t[i] != 0 and (not (i > 0 and t[i - 1] == t[i])):
                         char_list.append(self.alphabet[t[i] - 1])
-                        print(self.alphabet[t[i] - 1])
+                        # print(self.alphabet[t[i] - 1])
                 return ''.join(char_list)
         else:
             # batch mode
