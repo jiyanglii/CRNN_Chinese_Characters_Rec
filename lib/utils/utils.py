@@ -85,6 +85,7 @@ class strLabelConverter(object):
         # print(self.alphabet)
 
         self.dict = {}
+        self.alphabet = self.alphabet.split('\n')
         alphabet = alphabet.split('\n')
         for i, char in enumerate(alphabet):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
@@ -156,6 +157,7 @@ class strLabelConverter(object):
                     # print(t[i])
                     if t[i] != 0 and (not (i > 0 and t[i - 1] == t[i])):
                         char_list.append(self.alphabet[t[i] - 1])
+                        # print('self.alphabet[t[i] - 1] ********************')
                         # print(self.alphabet[t[i] - 1])
                 return ''.join(char_list)
         else:
