@@ -1,5 +1,8 @@
 from  __future__ import  absolute_import
 import time
+
+import numpy as np
+
 import lib.utils.utils as utils
 import torch
 
@@ -95,6 +98,7 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
     model.eval()
 
     n_correct = 0
+    wer_list = []
     # print(val_loader)
     with torch.no_grad():
         for i, (inp, idx) in enumerate(val_loader):
@@ -125,9 +129,17 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
             # print(preds.data)    # [0, 0, 0, ...]
             sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
             # print(sim_preds)    # '' '' '' ...
+
             for pred, target in zip(sim_preds, labels):
+                maxlen = max(len(pred), len(target))
+                wer_list.append(1 - wer(pred, target)/maxlen)
+                pred = ''.join(pred)
+                target = ''.join(target)
                 if pred == target:
                     n_correct += 1
+
+
+
 
             if (i + 1) % config.PRINT_FREQ == 0:
                 print('Epoch: [{0}][{1}/{2}]'.format(epoch, i, len(val_loader)))
@@ -146,6 +158,7 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
     print("[#correct:{} / #total:{}]".format(n_correct, num_test_sample))
     accuracy = n_correct / float(num_test_sample)
     print('Test loss: {:.4f}, accuray: {:.4f}'.format(losses.avg, accuracy))
+    print('Accuray based on WER: {:.4f}'.format(np.mean(wer_list)))
 
     if writer_dict:
         writer = writer_dict['writer']
@@ -154,3 +167,19 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
         writer_dict['valid_global_steps'] = global_steps + 1
 
     return accuracy
+
+
+def wer(s1, s2):
+
+    d = np.zeros([len(s1) + 1, len(s2) + 1])
+    d[:, 0] = np.arange(len(s1)+1)
+    d[0, :] = np.arange(len(s2)+1)
+
+    for j in range(1, len(s2)+1):
+        for i in range(1, len(s1)+1):
+            if s1[i-1] == s2[j-1]:
+                d[i, j] = d[i-1, j-1]
+            else:
+                d[i, j] = min(d[i-1, j]+1, d[i, j-1]+1, d[i-1, j-1]+1)
+
+    return d[-1, -1]

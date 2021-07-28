@@ -148,7 +148,12 @@ class strLabelConverter(object):
         if length.numel() == 1:
             length = length[0]
             assert t.numel() == length, "text with length: {} does not match declared length: {}".format(t.numel(), length)
+            label_list = []
+            for i in range(length):
+                label_list.append(self.alphabet[i - 1])
             if raw:
+                # return ''.join([self.alphabet[i - 1] for i in t])
+
                 return ''.join([self.alphabet[i - 1] for i in t])
             else:
                 char_list = []
@@ -157,9 +162,11 @@ class strLabelConverter(object):
                     # print(t[i])
                     if t[i] != 0 and (not (i > 0 and t[i - 1] == t[i])):
                         char_list.append(self.alphabet[t[i] - 1])
+                        # char_list.append(' ')
                         # print('self.alphabet[t[i] - 1] ********************')
                         # print(self.alphabet[t[i] - 1])
-                return ''.join(char_list)
+                # char_list = char_list[:-1]
+                return char_list  # ''.join(char_list)
         else:
             # batch mode
             assert t.numel() == length.sum(), "texts with length: {} does not match declared length: {}".format(t.numel(), length.sum())

@@ -40,10 +40,23 @@ class _OWN(data.Dataset):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         img_h, img_w = img.shape
+        # print('&&&&&&&&&&&&&&&')
+        # print(img_h, img_w)
+        # print('img_h is {} **************'.format(img_h))
+        # print('img_w is {} **************'.format(img_w))
+        ratio = self.inp_h / self.inp_w  # 64/280
+        if img_h / img_w > ratio:    # width is smaller than 280
+            # print('width small!')
 
+            img = cv2.copyMakeBorder(
+                img, 0, 0, 0, int(img_h/ratio - img_w), cv2.BORDER_CONSTANT, value=0)
+
+        img_h, img_w = img.shape
         img = cv2.resize(img, (0,0), fx=self.inp_w / img_w, fy=self.inp_h / img_h, interpolation=cv2.INTER_CUBIC)
         img = np.reshape(img, (self.inp_h, self.inp_w, 1))
-
+        # img_h, img_w = img.shape
+        # print('*************{}'.format(img_h))
+        # print(img_w)
         img = img.astype(np.float32)
         img = (img/255. - self.mean) / self.std
         img = img.transpose([2, 0, 1])
