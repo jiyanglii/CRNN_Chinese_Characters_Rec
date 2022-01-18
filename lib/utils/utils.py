@@ -167,8 +167,8 @@ class strLabelConverter(object):
             else:
                 char_list = []
                 for i in range(length):
-                    print(length)
-                    print(t[i])
+                    # print(length)
+                    # print(t[i])
                     if t[i] != 0 and (not (i > 0 and t[i - 1] == t[i])):
                         char_list.append(self.alphabet[t[i] - 1])
                         # char_list.append(' ')

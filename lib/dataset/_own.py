@@ -25,13 +25,18 @@ class _OWN(data.Dataset):
             # self.labels = [{c.split(' ')[0]: c.split(' ')[-1][:-1]} for c in file.readlines()]
             self.labels = [{c.split(' ')[0]: c.split(' ')[1:-1]} for c in file.readlines()]
 
+        for i in self.labels:
+            print(i)
+
             # for c in file.readlines():
+            #     print("///////////////////////")
             #     print(c)
 
         print("load {} images!".format(self.__len__()))
         # print(self.labels)
 
     def __len__(self):
+        # print("//////////////////////" + str(len(self.labels)))
         return len(self.labels)
 
     def __getitem__(self, idx):
