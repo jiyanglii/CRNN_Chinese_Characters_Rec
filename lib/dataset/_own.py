@@ -25,8 +25,8 @@ class _OWN(data.Dataset):
             # self.labels = [{c.split(' ')[0]: c.split(' ')[-1][:-1]} for c in file.readlines()]
             self.labels = [{c.split(' ')[0]: c.split(' ')[1:-1]} for c in file.readlines()]
 
-        for i in self.labels:
-            print(i)
+        # for i in self.labels:
+        #     print(i)
 
             # for c in file.readlines():
             #     print("///////////////////////")

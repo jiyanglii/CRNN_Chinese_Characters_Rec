@@ -117,7 +117,7 @@ class strLabelConverter(object):
             # print(item)
             # print(len(item))
 
-            length.append(len(item) - 1)
+            length.append(len(item))
             # length.append((len(item) - 1) * 2 - 1)
             for char in item:
                 # print("char***")
@@ -134,8 +134,8 @@ class strLabelConverter(object):
                 # result.append(0)
             # result = result[:-1]
         text = result
-        print(text)
-        print(length)
+        # print(text)
+        # print(length)
 
         return (torch.IntTensor(text), torch.IntTensor(length))
 
