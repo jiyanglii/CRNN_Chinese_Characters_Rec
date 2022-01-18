@@ -3,6 +3,7 @@ import torch.utils.data as data
 import os
 import numpy as np
 import cv2
+import pandas as pd
 
 class _OWN(data.Dataset):
     def __init__(self, config, is_train=True):
@@ -22,7 +23,7 @@ class _OWN(data.Dataset):
         # convert name:indices to name:string
         with open(txt_file, 'r', encoding='utf-8') as file:
             # self.labels = [{c.split(' ')[0]: c.split(' ')[-1][:-1]} for c in file.readlines()]
-            self.labels = [{c.split(' ')[0]: c.split(' ')[1:]} for c in file.readlines()]
+            self.labels = [{c.split(' ')[0]: c.split(' ')[1:-1]} for c in file.readlines()]
 
             # for c in file.readlines():
             #     print(c)
@@ -39,6 +40,9 @@ class _OWN(data.Dataset):
         img = cv2.imread(os.path.join(self.root, img_name))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+        # img = pd.read_csv(os.path.join(self.root, img_name))
+        # img = img.values
+
         img_h, img_w = img.shape
         # print('&&&&&&&&&&&&&&&')
         # print(img_h, img_w)
@@ -53,6 +57,7 @@ class _OWN(data.Dataset):
 
         img_h, img_w = img.shape
         img = cv2.resize(img, (0,0), fx=self.inp_w / img_w, fy=self.inp_h / img_h, interpolation=cv2.INTER_CUBIC)
+        cv2.imwrite(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'ttttt.jpg'), img)
         img = np.reshape(img, (self.inp_h, self.inp_w, 1))
         # img_h, img_w = img.shape
         # print('*************{}'.format(img_h))

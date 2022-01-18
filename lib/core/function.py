@@ -54,6 +54,7 @@ def train(config, train_loader, dataset, converter, model, criterion, optimizer,
         # compute loss
         batch_size = inp.size(0)
         text, length = converter.encode(labels)                    # length = 一个batch中的总字符长度, text = 一个batch中的字符所对应的下标
+        # print('^^^^^^^^^^^^^^^^^^^^ text and lengths')
         # print(text)
         # print(length)
         preds_size = torch.IntTensor([preds.size(0)] * batch_size)  # timestep * batchsize  preds.size: 41 x 16 x 2018
@@ -131,6 +132,7 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
             # print(sim_preds)    # '' '' '' ...
 
             for pred, target in zip(sim_preds, labels):
+                # target = target[0:-1]
                 maxlen = max(len(pred), len(target))
                 wer_list.append(1 - wer(pred, target)/maxlen)
                 pred = ''.join(pred)

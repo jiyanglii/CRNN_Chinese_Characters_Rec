@@ -81,6 +81,7 @@ class strLabelConverter(object):
         if self._ignore_case:
             alphabet = alphabet.lower()
         self.alphabet = alphabet + '-'  # for `-1` index
+        # print("*************************")
         # print("alphabet is: ")
         # print(self.alphabet)
 
@@ -90,8 +91,8 @@ class strLabelConverter(object):
         for i, char in enumerate(alphabet):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
             self.dict[char] = i + 1
-        # print(self.dict)
-        # self.dict['-'] = 0
+        # print("*************************")
+        # print(self.dict.keys()[0])
 
     def encode(self, text):
         """Support batch or single str.
@@ -114,20 +115,27 @@ class strLabelConverter(object):
                 item = item.decode('utf-8','strict')
             # print("ITEM***")
             # print(item)
+            # print(len(item))
 
-            length.append((len(item)-1)*2-1)
+            length.append(len(item) - 1)
+            # length.append((len(item) - 1) * 2 - 1)
             for char in item:
+                # print("char***")
+                # print(char)
                 if char not in self.dict or char == '':
                     continue
+                # print("char***")
+                # print(char)
                 index = self.dict[char]
+                # print(index)
 
                 # print(char)
                 result.append(index)
-                result.append(0)
-            result = result[:-1]
+                # result.append(0)
+            # result = result[:-1]
         text = result
-        # print(text)
-        # print(length)
+        print(text)
+        print(length)
 
         return (torch.IntTensor(text), torch.IntTensor(length))
 
@@ -149,17 +157,18 @@ class strLabelConverter(object):
             length = length[0]
             assert t.numel() == length, "text with length: {} does not match declared length: {}".format(t.numel(), length)
             label_list = []
+            # print(t)
+            # print(str(length) + ' ***********************')
             for i in range(length):
+                # print(i)
                 label_list.append(self.alphabet[i - 1])
             if raw:
-                # return ''.join([self.alphabet[i - 1] for i in t])
-
                 return ''.join([self.alphabet[i - 1] for i in t])
             else:
                 char_list = []
                 for i in range(length):
-                    # print(length)
-                    # print(t[i])
+                    print(length)
+                    print(t[i])
                     if t[i] != 0 and (not (i > 0 and t[i - 1] == t[i])):
                         char_list.append(self.alphabet[t[i] - 1])
                         # char_list.append(' ')

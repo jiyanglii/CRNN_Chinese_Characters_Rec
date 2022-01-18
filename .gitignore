@@ -9,3 +9,4 @@ output/
 *.jpg
 *.iml
 /.idea/misc.xml
+*.xml

@@ -55,7 +55,7 @@ class CRNN(nn.Module):
         convRelu(4, True)
         convRelu(5)
         cnn.add_module('pooling{0}'.format(3),
-                       nn.MaxPool2d((4, 4), (4, 1), (0, 1)))  # 512x2x16
+                       nn.MaxPool2d((2, 2), (2, 1), (0, 1)))  # 512x2x16
         convRelu(6, True)  # 512x1x16
 
         self.cnn = cnn
@@ -68,7 +68,8 @@ class CRNN(nn.Module):
         # conv features
         conv = self.cnn(input)
         b, c, h, w = conv.size()
-        print(conv.size())
+        print('#####################')
+        print(conv.size())   # 16, 512, 1, 71
         assert h == 1, "the height of conv must be 1"
         conv = conv.squeeze(2) # b *512 * width
         conv = conv.permute(2, 0, 1)  # [w, b, c]
