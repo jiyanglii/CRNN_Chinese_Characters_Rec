@@ -112,7 +112,7 @@ class strLabelConverter(object):
 
         for item in text:
             if decode_flag:
-                item = item.decode('utf-8','strict')
+                item = item.decode('utf-8', 'strict')
             # print("ITEM***")
             # print(item)
             # print(len(item))

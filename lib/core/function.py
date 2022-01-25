@@ -119,7 +119,11 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
             # print(text)
             # print(length)
             preds_size = torch.IntTensor([preds.size(0)] * batch_size)
-            # print(preds_size)
+            # print("@@@@@@@@@@@@@@@@@@@@@@")
+            # print(inp)
+            # print("@@@@@@@@@@@@@@@@@@@@@@")
+            # print(labels)
+
             loss = criterion(preds, text, preds_size, length)
 
             losses.update(loss.item(), inp.size(0))
@@ -150,6 +154,8 @@ def validate(config, val_loader, dataset, converter, model, criterion, device, e
                 break
 
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:config.TEST.NUM_TEST_DISP]
+    # print('$$$$$$$$$$$$$$$$$$$$$$')
+    # print(preds_size.data)
     for raw_pred, pred, gt in zip(raw_preds, sim_preds, labels):
         print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
 

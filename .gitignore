@@ -10,3 +10,4 @@ output/
 *.iml
 /.idea/misc.xml
 *.xml
+*.txt
