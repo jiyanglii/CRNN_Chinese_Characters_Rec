@@ -12,7 +12,7 @@ CUDNN:
 
 DATASET:
   DATASET: OWN
-  ROOT: "images/train_imu2"
+  ROOT: "images/cha4_all"
   JSON_FILE: {'train': 'lib/dataset/txt/train_own.txt', 'val': 'lib/dataset/txt/test_own.txt'}
   SCALE_FACTOR: 1
   ROT_FACTOR: 30

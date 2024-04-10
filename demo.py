@@ -13,9 +13,9 @@ import argparse
 def parse_arg():
     parser = argparse.ArgumentParser(description="demo")
 
-    parser.add_argument('--cfg', help='experiment configuration filename', type=str, default='lib/config/360CC_config.yaml')
+    parser.add_argument('--cfg', help='experiment configuration filename', type=str, default='lib/config/OWN_config.yaml')
     parser.add_argument('--image_path', type=str, default='images/test.png', help='the path to your image')
-    parser.add_argument('--checkpoint', type=str, default='output/checkpoints/mixed_second_finetune_acc_97P7.pth',
+    parser.add_argument('--checkpoint', type=str, default='output/OWN/crnn/...',
                         help='the path to your checkpoints')
 
     args = parser.parse_args()
